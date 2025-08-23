@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Perfect Day</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Base Styles & Animated Background --- */
+        :root {
+            --card-bg-color: rgba(255, 255, 255, 0.1);
+            --text-color: #4a2c40;
+      --button-bg-color: rgba(74, 44, 64, 0.2);
+      --button-hover-bg: rgba(74, 44, 64, 0.4);
+      --border-color: rgba(74, 44, 64, 0.2);
+}
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevents scrollbars from the animation */
+            /* The animated gradient background */
+            background: linear-gradient(300deg,  #e18aaa, #f57eac, #f2b6c6, #b86bbd);
+            background-size: 400% 400%;
+            animation: gradientAnimation 20s ease infinite;
+        }
+
+        /* Keyframes for the fluid background animation */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Game Container & Glassmorphism Effect --- */
+        .game-container {
+            width: 90%;
+            max-width: 600px;
+            background: var(--card-bg-color);
+            backdrop-filter: blur(15px); /* This creates the frosted glass effect */
+            -webkit-backdrop-filter: blur(15px); /* For Safari compatibility */
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: opacity 0.5s ease-in-out; /* For smooth fade transitions */
+        }
+
+        /* --- Typography --- */
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #story-text, #story-text-game {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            min-height: 100px; /* Prevents layout shifts during text changes */
+            margin-bottom: 2rem;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* --- Buttons & Choices --- */
+        #choices, #choices-game {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .choice-btn {
+            background: var(--button-bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .choice-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-3px); /* Lifts the button slightly on hover */
+        }
+        
+        .surprise-btn {
+            background: var(--surprise-btn-bg);
+            border-color: var(--surprise-btn-border);
+        }
+
+        .surprise-btn:hover {
+            background: var(--surprise-btn-hover-bg);
+        }
+
+        /* --- Loading Spinner --- */
+        .loader {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Utility Classes for JS --- */
+        .hidden {
+            display: none;
+        }
+        
+        .fade-out {
+            opacity: 0;
+        }
+        </style>
+</head>
+<body>
+  <div class="game-container" id="game-container">
+    <div id="start-screen">
+      <h1>Our Perfect Day</h1>
+      <p>An adventure made just for you, Vanshu ❤️</p>
+      <button class="choice-btn" id="start-btn">Let's Begin</button>
+    </div>
+    <div id="game-screen" class="hidden">
+      <p id="story-text-game"></p>
+      <div id="choices-game"></div>
+    </div>
+  </div>
+  <audio id="romantic" src="teri_ore.flac" preload="auto" loop></audio>
+  <script>
+    const gameContainer = document.getElementById('game-container');
+    const startScreen = document.getElementById('start-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const startBtn = document.getElementById('start-btn');
+    const storyTextElement = document.getElementById('story-text-game');
+    const choicesElement = document.getElementById('choices-game');
+
+const story = [
+  // --- MORNING ---
+  {
+    id: 1,
+    text: "The morning sun gently wakes us. Wrapped in warmth, I whisper 'Good morning, Vanshu.' What should we do first?",
+    choices: [
+      { text: "Make your favorite coffee ☕", nextScene: 2 },
+      { text: "Stay in bed, cuddle tighter", nextScene: 3 }
+    ]
+  },
+  {
+    id: 2,
+    text: "The rich aroma of coffee fills the room. Your smile with the first sip is the best sunrise. What should we have for breakfast?",
+    choices: [
+      { text: "Fluffy pancakes 🥞", nextScene: 10 },
+      { text: "Poha, your comfort food", nextScene: 10 }
+    ]
+  },
+  {
+    id: 3,
+    text: "Just holding you close makes the world disappear. My heart says, 'This is home.' Shall we get breakfast now?",
+    choices: [
+      { text: "Sweet pancakes", nextScene: 10 },
+      { text: "Savory poha", nextScene: 10 }
+    ]
+  },
+  {
+    id: 10,
+    text: "Cooking side by side, bumping shoulders, stealing bites. Even the kitchen feels like a love story. What’s next?",
+    choices: [
+      { text: "Solve a mystery together 🔍", nextScene: 4 },
+      { text: "Turn up music & dance 🎶", nextScene: 5 }
+    ]
+  },
+
+  // --- AFTERNOON ---
+  {
+    id: 4,
+    text: "We curl up with a thrilling mystery. You read aloud, I admire every expression on your face. How do we set the mood?",
+    choices: [
+      { text: "Build a cozy blanket fort", nextScene: 11 },
+      { text: "Light scented candles", nextScene: 12 }
+    ]
+  },
+  {
+    id: 5,
+    text: "Music fills the air. I spin you around, and our laughter becomes the rhythm. Which soundtrack suits us?",
+    choices: [
+      { text: "Old school Bollywood ❤️", nextScene: 13 },
+      { text: "Our silly playlist 🎤", nextScene: 14 }
+    ]
+  },
+  {
+    id: 11,
+    text: "Under a fortress of blankets, our world shrinks to just us. Reading, laughing, teasing—time melts away.",
+    choices: [ { text: "Dinner time?", nextScene: 6 } ]
+  },
+  {
+    id: 12,
+    text: "Candlelight glows, your eyes sparkle brighter. We’re two detectives wrapped in romance and mystery.",
+    choices: [ { text: "Hungry detectives need dinner", nextScene: 6 } ]
+  },
+  {
+    id: 13,
+    text: "With Bollywood melodies, we sway like the stars of our own film. You look radiant in every step.",
+    choices: [ { text: "Let’s make dinner", nextScene: 6 } ]
+  },
+  {
+    id: 14,
+    text: "Our playlist blares; we sing, we dance, we collapse laughing. These silly, sweet moments are forever mine.",
+    choices: [ { text: "Dinner awaits", nextScene: 6 } ]
+  },
+
+  // --- EVENING ---
+  {
+    id: 6,
+    text: "We cook side by side again—every slice, every stir feels like teamwork. How do we enjoy our meal?",
+    choices: [
+      { text: "Romantic candlelit dinner 🍷", nextScene: 15 },
+      { text: "Cushion picnic indoors 🥗", nextScene: 16 }
+    ]
+  },
+  {
+    id: 15,
+    text: "The table is glowing, the food delicious. I raise a toast: 'To us, the best love story ever written.'",
+    choices: [
+      { text: "Cozy movie time 🎬", nextScene: 19 },
+      { text: "Wind down for night", nextScene: 17 }
+    ]
+  },
+  {
+    id: 16,
+    text: "On the floor with cushions, sharing bites and laughter, we create our own five-star memory.",
+    choices: [
+      { text: "Bake cookies together 🍪", nextScene: 20 },
+      { text: "Shall we wind down?", nextScene: 17 }
+    ]
+  },
+
+  // --- NIGHT ---
+  {
+    id: 17,
+    text: "Dinner done, hearts full. How should we close this perfect day?",
+    choices: [
+      { text: "Watch the city lights 🌆", nextScene: 18 },
+      { text: "Soft music and cuddles 🎵", nextScene: 18 }
+    ]
+  },
+  {
+    id: 18,
+    text: "The quiet wraps around us. Now, your skincare, your drops, your comfort—I love taking care of you.",
+    choices: [ { text: "End with love", nextScene: 7 } ]
+  },
+  {
+    id: 7,
+    text: "Every little routine with you feels like poetry. You’re my safest place, my sweetest dream.",
+    choices: [ { text: "End our perfect day", nextScene: 8 } ]
+  },
+  {
+    id: 8,
+    text: "Tucked in, wrapped around you. Vanshu, every day with you is my dream come true. I love you endlessly. 💖",
+    choices: [ { text: "Play Again?", nextScene: 1 } ]
+  },
+
+  // --- EXTRA INDOOR SWEETNESS ---
+  {
+    id: 19,
+    text: "We curl up with blankets, a movie playing softly. Halfway through, your head rests on my shoulder, and the world feels perfect.",
+    choices: [ { text: "Drift toward bedtime", nextScene: 17 } ]
+  },
+  {
+    id: 20,
+    text: "Flour on our hands, laughter in the air—we bake cookies that turn out more like memories than desserts.",
+    choices: [ { text: "Snack on them together", nextScene: 17 } ]
+  }
+];
+
+
+    function startGame() {
+      gameContainer.classList.add('fade-out');
+      setTimeout(() => {
+        startScreen.classList.add('hidden');
+        gameScreen.classList.remove('hidden');
+        showScene(1);
+        gameContainer.classList.remove('fade-out');
+      }, 400);
+    }
+
+    function showScene(sceneId) {
+      const currentScene = story.find(s => s.id === sceneId);
+      if (!currentScene) return;
+      storyTextElement.innerText = currentScene.text;
+      choicesElement.innerHTML = "";
+      currentScene.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.innerText = choice.text;
+        btn.classList.add('choice-btn');
+        btn.addEventListener('click', () => selectChoice(choice.nextScene));
+        choicesElement.appendChild(btn);
+      });
+    }
+
+    function selectChoice(nextSceneId) {
+      gameContainer.classList.add('fade-out');
+      setTimeout(() => {
+        if (nextSceneId === 1 && story.find(s => s.id === 8)) {
+          resetGame(); return;
+        }
+        showScene(nextSceneId);
+        gameContainer.classList.remove('fade-out');
+      }, 400);
+    }
+
+    function resetGame() {
+      gameContainer.classList.add('fade-out');
+      setTimeout(() => {
+        gameScreen.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+        gameContainer.classList.remove('fade-out');
+      }, 400);
+    }
+
+    startBtn.addEventListener('click', startGame);
+    function startMusicOnFirstClick() {
+      const romantic_song = document.getElementById("romantic");
+      let musicStarted = false;
+
+      document.body.addEventListener("click", function handler() {
+        if (!musicStarted) {
+          romantic_song.volume = 0.0; // start silent
+          romantic_song.play().catch(err => console.log("Playback blocked:", err));
+
+          // fade in over 5 seconds (adjust as you like)
+          let fadeInterval = setInterval(() => {
+            if (romantic_song.volume < 0.60) {
+              romantic_song.volume = Math.min(romantic_song.volume + 0.02, 0.60);
+            } else {
+              clearInterval(fadeInterval);
+            }
+          }, 200); // increase every 200ms
+
+          musicStarted = true;
+        }
+        document.body.removeEventListener("click", handler);
+      });
+    }
+  startMusicOnFirstClick();
+
+  </script>
+
+</body>
+</html>
