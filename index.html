@@ -7,181 +7,123 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* --- Base Styles & Animated Background --- */
-        :root {
-            --card-bg-color: rgba(255, 255, 255, 0.1);
-            --text-color: #4a2c40;
-      --button-bg-color: rgba(74, 44, 64, 0.2);
-      --button-hover-bg: rgba(74, 44, 64, 0.4);
-      --border-color: rgba(74, 44, 64, 0.2);
-}
+   <style>
+    /* --- Base Styles & Animated Background --- */
+    :root {
+        --card-bg-color: rgba(255, 255, 255, 0.1);
+        --text-color: #4a2c40;
+        --button-bg-color: rgba(74, 44, 64, 0.2);
+        --button-hover-bg: rgba(74, 44, 64, 0.4);
+        --border-color: rgba(74, 44, 64, 0.2);
+    }
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden; /* Prevents scrollbars from the animation */
-            /* The animated gradient background */
-            background: linear-gradient(300deg,  #e18aaa, #f57eac, #f2b6c6, #b86bbd);
-            background-size: 400% 400%;
-            animation: gradientAnimation 20s ease infinite;
-        }
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden; /* Prevents scrollbars from the animation on desktop */
+        background: linear-gradient(300deg,  #e18aaa, #f57eac, #f2b6c6, #b86bbd);
+        background-size: 400% 400%;
+        animation: gradientAnimation 20s ease infinite;
+    }
 
-        /* Keyframes for the fluid background animation */
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-        /* --- Game Container & Glassmorphism Effect --- */
-        .game-container {
-            width: 90%;
-            max-width: 600px;
-            background: var(--card-bg-color);
-            backdrop-filter: blur(15px); /* This creates the frosted glass effect */
-            -webkit-backdrop-filter: blur(15px); /* For Safari compatibility */
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            text-align: center;
-            transition: opacity 0.5s ease-in-out; /* For smooth fade transitions */
-        }
+    /* --- Game Container & Glassmorphism Effect --- */
+    .game-container {
+        width: 90%;
+        max-width: 600px;
+        background: var(--card-bg-color);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        text-align: center;
+        transition: opacity 0.5s ease-in-out;
+    }
 
-        /* --- Typography --- */
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    /* --- Typography --- */
+    h1 {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        #story-text, #story-text-game {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            min-height: 100px; /* Prevents layout shifts during text changes */
-            margin-bottom: 2rem;
-            transition: opacity 0.3s ease-in-out;
-        }
+    #story-text, #story-text-game {
+        font-size: clamp(1rem, 4vw, 1.2rem);
+        line-height: 1.6;
+        min-height: 100px;
+        margin-bottom: 2rem;
+        transition: opacity 0.3s ease-in-out;
+    }
 
-        /* --- Buttons & Choices --- */
-        #choices, #choices-game {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+    /* --- Buttons & Choices --- */
+    #choices, #choices-game {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
 
-        .choice-btn {
-            background: var(--button-bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 1rem;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+    .choice-btn {
+        background: var(--button-bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: clamp(0.8rem, 3vw, 1rem);
+        font-size: clamp(0.9rem, 3vw, 1rem);
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 
-        .choice-btn:hover {
-            background: var(--button-hover-bg);
-            transform: translateY(-3px); /* Lifts the button slightly on hover */
-        }
-        
-        .surprise-btn {
-            background: var(--surprise-btn-bg);
-            border-color: var(--surprise-btn-border);
-        }
+    .choice-btn:hover {
+        background: var(--button-hover-bg);
+        transform: translateY(-3px);
+    }
+    
+    /* --- Utility Classes for JS --- */
+    .hidden {
+        display: none;
+    }
+    
+    .fade-out {
+        opacity: 0;
+    }
 
-        .surprise-btn:hover {
-            background: var(--surprise-btn-hover-bg);
-        }
-
-        /* --- Loading Spinner --- */
-        .loader {
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--text-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- Utility Classes for JS --- */
-        .hidden {
-            display: none;
-        }
-        
-        .fade-out {
-            opacity: 0;
-        }
-        /* --- Responsive Typography --- */
-h1 {
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
-}
-
-#story-text, #story-text-game {
-  font-size: clamp(1rem, 4vw, 1.2rem);
-  line-height: 1.6;
-}
-
-/* --- Game Container --- */
-.game-container {
-  width: 90%;
-  max-width: 600px;
-  margin: 1rem;
-  padding: clamp(1rem, 4vw, 2rem);
-}
-
-/* --- Choice Buttons --- */
-.choice-btn {
-  padding: clamp(0.8rem, 3vw, 1rem);
-  font-size: clamp(0.9rem, 3vw, 1rem);
-  border-radius: 12px;
-  width: 100%;
-}
-
-/* --- Extra Small Devices --- */
-@media (max-width: 480px) {
-  body {
-    align-items: flex-start; /* So the card isn't squished vertically */
-    padding-top: 2rem;
-  }
-  .game-container {
-    border-radius: 15px;
-    padding: 1rem;
-  }
-  #choices-game {
-    gap: 0.5rem;
-  }
-}
+    /* ==============================================
+    === MOBILE RESPONSIVE STYLES ARE UPDATED HERE ===
+    ==============================================
+    */
     @media (max-width: 768px) {
         body {
-            /* CHANGE: Re-centered the content vertically */
             align-items: center; 
-            padding: 1rem 0; /* Ensures there's always a little space */
-            overflow-y: auto; /* Allows scrolling if content gets too tall */
+            /* CHANGE: Added 1rem of padding to the left and right sides */
+            padding: 1rem; 
+            overflow-y: auto;
         }
 
         .game-container {
-            width: 90%; /* Uses most of the screen width */
-            max-width: 500px; /* Still good to have a max-width */
-            margin: 0;
-            /* CHANGE: More vertical padding for the "elongated" look */
-            padding: 2rem 1.5rem; 
+            /* CHANGE: Set width to 100% to fill the new padded area of the body */
+            width: 100%;
+            max-width: 420px;
+            min-height: 80vh; 
+            padding: 3rem 1.5rem; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         h1 {
@@ -190,15 +132,16 @@ h1 {
         
         #story-text, #story-text-game {
             min-height: 120px;
+            margin-bottom: 1.5rem;
         }
 
         .choice-btn {
-            /* CHANGE: Increased padding for bigger, 'Android-style' buttons */
             padding: 1.2rem;
             font-size: 1rem;
+            border-radius: 14px;
         }
     }
-        </style>
+</style>
 </head>
 <body>
   <div class="game-container" id="game-container">
